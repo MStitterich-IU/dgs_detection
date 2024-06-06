@@ -22,7 +22,7 @@ with holisticModel.Holistic(min_detection_confidence=0.5, min_tracking_confidenc
         frame, results = keypoint_detection(frame, holisticModel)
 
         # Show camera feed to user
-        cv2.imshow('OpenCV Feed', cv2.flip(frame, 180))
+        cv2.imshow('Detect gesture keypoints', frame)
 
         # Quit capture gracefully via key input
         key = cv2.waitKey(10)
