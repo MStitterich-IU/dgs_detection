@@ -12,14 +12,20 @@ def keypoint_detection(frame, model):
     frame = cv2.cvtColor(frame, cv2.COLOR_RGB2BGR)
     return frame, results
 
+def visualize_keypoints(frame, results):
+    mpDrawUtil.draw_landmarks(frame, results.face_landmarks, holisticModel.FACEMESH_CONTOURS ) # Visualize face contours
+
 cameraCapture = cv2.VideoCapture(1)
-with holisticModel.Holistic(min_detection_confidence=0.5, min_tracking_confidence=0.5) as holisticModel:
+with holisticModel.Holistic(min_detection_confidence=0.5, min_tracking_confidence=0.5) as hModel:
     while cameraCapture.isOpened():
         # Read incoming camera frames
         ret, frame = cameraCapture.read()
 
         #Detect and process gesture keypoints
-        frame, results = keypoint_detection(frame, holisticModel)
+        frame, results = keypoint_detection(frame, hModel)
+
+        #Visualize keypoints and connections
+        visualize_keypoints(frame, results)
 
         # Show camera feed to user
         cv2.imshow('Detect gesture keypoints', frame)
