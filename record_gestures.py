@@ -33,36 +33,44 @@ def visualize_lmarks(frame, results):
     mpDrawUtil.draw_landmarks(frame, results.right_hand_landmarks, holisticModel.HAND_CONNECTIONS, HAND_LMARK, HAND_CONN) 
 
 def read_lmark_values(results):
-    poseValues = npy.array([[res.x, res.y, res.z, res.visibility] for res in results.pose_landmarks.landmark]).flatten() if results.pose_landmarks else np.zeros(33*4)
-    faceValues = npy.array([[res.x, res.y, res.z] for res in results.face_landmarks.landmark]).flatten() if results.face_landmarks else np.zeros(468*3)
+    poseValues = npy.array([[res.x, res.y, res.z, res.visibility] for res in results.pose_landmarks.landmark]).flatten() if results.pose_landmarks else npy.zeros(33*4)
+    faceValues = npy.array([[res.x, res.y, res.z] for res in results.face_landmarks.landmark]).flatten() if results.face_landmarks else npy.zeros(468*3)
     lhValues = npy.array([[res.x, res.y, res.z] for res in results.left_hand_landmarks.landmark]).flatten() if results.left_hand_landmarks else npy.zeros(21*3)
     rhValues = npy.array([[res.x, res.y, res.z] for res in results.right_hand_landmarks.landmark]).flatten() if results.right_hand_landmarks else npy.zeros(21*3)
     return npy.concatenate([poseValues, faceValues, lhValues, rhValues])
 
+recordingGestures = ['hallo', 'entschuldigung']
+videoCount = 5
+framesPerVideo = 30
+pSetup.setupStructure(recordingGestures, videoCount)
 cameraCapture = cv2.VideoCapture(1)
 
 with holisticModel.Holistic(min_detection_confidence=0.5, min_tracking_confidence=0.5) as hModel:
-    while cameraCapture.isOpened():
-        # Read incoming camera frames
-        ret, frame = cameraCapture.read()
+    #while cameraCapture.isOpened():
 
-        #Detect and process gesture keypoints
-        frame, results = keypoint_detection(frame, hModel)
+        for gesture in recordingGestures:
+            for video in range(1, videoCount+1):
+                for frameNr in range(1, framesPerVideo+1):
+                    # Read incoming camera frames
+                    ret, frame = cameraCapture.read()
 
-        #Visualize keypoints and connections
-        visualize_lmarks(frame, results)
+                    #Detect and process gesture keypoints
+                    frame, results = keypoint_detection(frame, hModel)
 
-        # Show camera feed to user
-        cv2.imshow('Detect gesture keypoints', frame)
+                    #Visualize keypoints and connections
+                    visualize_lmarks(frame, results)
 
-        #Read landmark values and save to file
-        lmarkValues = read_lmark_values(results)
-        filePath = os.path.join(pSetup.DATA_PATH, "test")
-        npy.save(filePath, lmarkValues)
+                    # Show camera feed to user
+                    cv2.imshow('Detect gesture keypoints', frame)
 
-        # Quit capture gracefully via key input
-        key = cv2.waitKey(10)
-        if key == ord('q'):
-            break
-cameraCapture.release()
-cv2.destroyAllWindows()
+                    #Read landmark values and save to file
+                    lmarkValues = read_lmark_values(results)
+                    filePath = os.path.join(pSetup.DATA_PATH, gesture, str(video), str(frameNr))
+                    npy.save(filePath, lmarkValues)
+
+                    # Quit capture gracefully via key input
+                    key = cv2.waitKey(10)
+                    if key == ord('q'):
+                        break
+        cameraCapture.release()
+        cv2.destroyAllWindows()
