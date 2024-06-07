@@ -1,5 +1,8 @@
+import project_setup as pSetup
 import cv2
 import mediapipe as mp
+import numpy as npy
+import os
 
 holisticModel = mp.solutions.holistic
 mpDrawUtil = mp.solutions.drawing_utils
@@ -29,6 +32,13 @@ def visualize_lmarks(frame, results):
     # Right hand connections
     mpDrawUtil.draw_landmarks(frame, results.right_hand_landmarks, holisticModel.HAND_CONNECTIONS, HAND_LMARK, HAND_CONN) 
 
+def read_lmark_values(results):
+    poseValues = npy.array([[res.x, res.y, res.z, res.visibility] for res in results.pose_landmarks.landmark]).flatten()
+    faceValues = npy.array([[res.x, res.y, res.z] for res in results.face_landmarks.landmark]).flatten()
+    lhValues = npy.array([[res.x, res.y, res.z] for res in results.left_hand_landmarks.landmark]).flatten()
+    rhValues = npy.array([[res.x, res.y, res.z] for res in results.right_hand_landmarks.landmark]).flatten()
+    return npy.concatenate([poseValues, faceValues, lhValues, rhValues])
+
 cameraCapture = cv2.VideoCapture(1)
 
 with holisticModel.Holistic(min_detection_confidence=0.5, min_tracking_confidence=0.5) as hModel:
@@ -44,6 +54,11 @@ with holisticModel.Holistic(min_detection_confidence=0.5, min_tracking_confidenc
 
         # Show camera feed to user
         cv2.imshow('Detect gesture keypoints', frame)
+
+        #Read landmark values and save to file
+        lmarkValues = read_lmark_values(results)
+        filePath = os.path.join(pSetup.DATA_PATH, "test")
+        npy.save(filePath, lmarkValues)
 
         # Quit capture gracefully via key input
         key = cv2.waitKey(10)
