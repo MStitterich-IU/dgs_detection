@@ -12,13 +12,25 @@ def keypoint_detection(frame, model):
     frame = cv2.cvtColor(frame, cv2.COLOR_RGB2BGR)
     return frame, results
 
-def visualize_keypoints(frame, results):
-    mpDrawUtil.draw_landmarks(frame, results.face_landmarks, holisticModel.FACEMESH_CONTOURS ) # Visualize face contours
-    mpDrawUtil.draw_landmarks(frame, results.pose_landmarks, holisticModel.POSE_CONNECTIONS) # Posture connections
-    mpDrawUtil.draw_landmarks(frame, results.left_hand_landmarks, holisticModel.HAND_CONNECTIONS) # Left hand connections
-    mpDrawUtil.draw_landmarks(frame, results.right_hand_landmarks, holisticModel.HAND_CONNECTIONS) # Right hand connections
+def visualize_lmarks(frame, results):
+    #Drawing specs for changing the  presentation style
+    POSE_LMARK = mpDrawUtil.DrawingSpec(color=(168,52,50), thickness=2, circle_radius=3)
+    POSE_CONN = mpDrawUtil.DrawingSpec(color=(50,50,168), thickness=2, circle_radius=2)
+    HAND_LMARK = mpDrawUtil.DrawingSpec(color=(134,109,29), thickness=2, circle_radius=3)
+    HAND_CONN = mpDrawUtil.DrawingSpec(color=(161,161,160), thickness=2, circle_radius=2)
+
+    # Visualize face contours
+    #mpDrawUtil.draw_landmarks(frame, results.face_landmarks, holisticModel.FACEMESH_CONTOURS)
+    
+    # Posture landmarks
+    mpDrawUtil.draw_landmarks(frame, results.pose_landmarks, holisticModel.POSE_CONNECTIONS, POSE_LMARK, POSE_CONN) 
+    # Left hand connections
+    mpDrawUtil.draw_landmarks(frame, results.left_hand_landmarks, holisticModel.HAND_CONNECTIONS, HAND_LMARK, HAND_CONN) 
+    # Right hand connections
+    mpDrawUtil.draw_landmarks(frame, results.right_hand_landmarks, holisticModel.HAND_CONNECTIONS, HAND_LMARK, HAND_CONN) 
 
 cameraCapture = cv2.VideoCapture(1)
+
 with holisticModel.Holistic(min_detection_confidence=0.5, min_tracking_confidence=0.5) as hModel:
     while cameraCapture.isOpened():
         # Read incoming camera frames
@@ -28,7 +40,7 @@ with holisticModel.Holistic(min_detection_confidence=0.5, min_tracking_confidenc
         frame, results = keypoint_detection(frame, hModel)
 
         #Visualize keypoints and connections
-        visualize_keypoints(frame, results)
+        visualize_lmarks(frame, results)
 
         # Show camera feed to user
         cv2.imshow('Detect gesture keypoints', frame)
