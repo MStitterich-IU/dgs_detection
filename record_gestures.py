@@ -44,7 +44,10 @@ videoCount = 5
 framesPerVideo = 30
 pSetup.setupStructure(recordingGestures, videoCount)
 cameraCapture = cv2.VideoCapture(1)
-
+print(cameraCapture.get(cv2.CAP_PROP_FRAME_WIDTH))
+print(cameraCapture.get(cv2.CAP_PROP_FRAME_HEIGHT))
+cameraCapture.set(cv2.CAP_PROP_FRAME_WIDTH, 800)
+cameraCapture.set(cv2.CAP_PROP_FRAME_HEIGHT, 600)
 
 with holisticModel.Holistic(min_detection_confidence=0.5, min_tracking_confidence=0.5) as hModel:
 
@@ -63,16 +66,16 @@ with holisticModel.Holistic(min_detection_confidence=0.5, min_tracking_confidenc
                     #Wait for key input before starting data collection for each video sequence
                     if frameNr == 1: 
                         cv2.putText(frame, 'Press key to start collecting data', (30,30),
-                                    cv2.FONT_HERSHEY_PLAIN, 2, (0, 0, 255), 2, cv2.LINE_AA)
+                                    cv2.FONT_HERSHEY_DUPLEX, 1, (255, 0, 0), 2, cv2.LINE_AA)
                         cv2.putText(frame, 'for gesture {} video number {}'.format(gesture, video),
-                                    (30, 60), cv2.FONT_HERSHEY_PLAIN, 2, (0, 0, 255), 2, cv2.LINE_AA)
+                                    (30, 60), cv2.FONT_HERSHEY_DUPLEX, 1, (255, 0, 0), 2, cv2.LINE_AA)
                         cv2.imshow('Detect gesture keypoints', frame)
                         cv2.waitKey(0)
                     else:
                         cv2.putText(frame, 'Collecting data for gesture', (30,30),
-                                    cv2.FONT_HERSHEY_PLAIN, 2, (0, 0, 255), 2, cv2.LINE_AA)
+                                    cv2.FONT_HERSHEY_DUPLEX, 1, (255, 0, 0), 2, cv2.LINE_AA)
                         cv2.putText(frame, '{} video number {}'.format(gesture, video),
-                                    (30, 60), cv2.FONT_HERSHEY_PLAIN, 2, (0, 0, 255), 2, cv2.LINE_AA)
+                                    (30, 60), cv2.FONT_HERSHEY_DUPLEX, 1, (255, 0, 0), 2, cv2.LINE_AA)
                         cv2.imshow('Detect gesture keypoints', frame)
 
                     #Read landmark values and save to file
