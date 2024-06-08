@@ -45,8 +45,8 @@ framesPerVideo = 30
 pSetup.setupStructure(recordingGestures, videoCount)
 cameraCapture = cv2.VideoCapture(1)
 
+
 with holisticModel.Holistic(min_detection_confidence=0.5, min_tracking_confidence=0.5) as hModel:
-    #while cameraCapture.isOpened():
 
         for gesture in recordingGestures:
             for video in range(1, videoCount+1):
@@ -60,17 +60,30 @@ with holisticModel.Holistic(min_detection_confidence=0.5, min_tracking_confidenc
                     #Visualize keypoints and connections
                     visualize_lmarks(frame, results)
 
-                    # Show camera feed to user
-                    cv2.imshow('Detect gesture keypoints', frame)
+                    #Wait for key input before starting data collection for each video sequence
+                    if frameNr == 1: 
+                        cv2.putText(frame, 'Press key to start collecting data', (30,30),
+                                    cv2.FONT_HERSHEY_PLAIN, 2, (0, 0, 255), 2, cv2.LINE_AA)
+                        cv2.putText(frame, 'for gesture {} video number {}'.format(gesture, video),
+                                    (30, 60), cv2.FONT_HERSHEY_PLAIN, 2, (0, 0, 255), 2, cv2.LINE_AA)
+                        cv2.imshow('Detect gesture keypoints', frame)
+                        cv2.waitKey(0)
+                    else:
+                        cv2.putText(frame, 'Collecting data for gesture', (30,30),
+                                    cv2.FONT_HERSHEY_PLAIN, 2, (0, 0, 255), 2, cv2.LINE_AA)
+                        cv2.putText(frame, '{} video number {}'.format(gesture, video),
+                                    (30, 60), cv2.FONT_HERSHEY_PLAIN, 2, (0, 0, 255), 2, cv2.LINE_AA)
+                        cv2.imshow('Detect gesture keypoints', frame)
 
                     #Read landmark values and save to file
                     lmarkValues = read_lmark_values(results)
                     filePath = os.path.join(pSetup.DATA_PATH, gesture, str(video), str(frameNr))
                     npy.save(filePath, lmarkValues)
 
-                    # Quit capture gracefully via key input
+                    # Quit capture gracefully by pressing ESC
                     key = cv2.waitKey(10)
-                    if key == ord('q'):
+                    if key == 27:
+
                         break
         cameraCapture.release()
         cv2.destroyAllWindows()
