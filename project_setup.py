@@ -13,7 +13,6 @@ def setupStructure(gestures, no_videos, multicam=False):
                 os.makedirs(os.path.join(DATA_PATH, gesture, str(video)))
                 
             except:
-                print("Passed")
                 pass
 
 if __name__ == "__main__":
