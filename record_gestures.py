@@ -39,17 +39,18 @@ def read_lmark_values(results):
     rhValues = npy.array([[res.x, res.y, res.z] for res in results.right_hand_landmarks.landmark]).flatten() if results.right_hand_landmarks else npy.zeros(21*3)
     return npy.concatenate([poseValues, faceValues, lhValues, rhValues])
 
-recordingGestures = ['hallo', 'entschuldigung']
-videoCount = 5
-framesPerVideo = 30
-pSetup.setupStructure(recordingGestures, videoCount)
+#Set up camera for recording
 cameraCapture = cv2.VideoCapture(1)
-print(cameraCapture.get(cv2.CAP_PROP_FRAME_WIDTH))
-print(cameraCapture.get(cv2.CAP_PROP_FRAME_HEIGHT))
 cameraCapture.set(cv2.CAP_PROP_FRAME_WIDTH, 800)
 cameraCapture.set(cv2.CAP_PROP_FRAME_HEIGHT, 600)
 
-with holisticModel.Holistic(min_detection_confidence=0.5, min_tracking_confidence=0.5) as hModel:
+def record_gestures(recordingGestures, videoCount=5, framesPerVideo=30):
+
+    #Create project recording folders
+    pSetup.setupStructure(recordingGestures, videoCount)
+
+    #Start recording process
+    with holisticModel.Holistic(min_detection_confidence=0.5, min_tracking_confidence=0.5) as hModel:
 
         for gesture in recordingGestures:
             for video in range(1, videoCount+1):
@@ -86,7 +87,12 @@ with holisticModel.Holistic(min_detection_confidence=0.5, min_tracking_confidenc
                     # Quit capture gracefully by pressing ESC
                     key = cv2.waitKey(10)
                     if key == 27:
+                        return
 
-                        break
         cameraCapture.release()
         cv2.destroyAllWindows()
+
+if __name__ == '__main__':
+    recordingGestures = ['hallo', 'entschuldigung']
+    record_gestures(recordingGestures)
+    print('Recording finished')
