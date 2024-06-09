@@ -1,9 +1,9 @@
 import os
 
-def setupStructure(gestures, no_videos, multicam=False):
+# Folder for recorded NumPy data
+DATA_PATH = os.path.join('recording_data')
 
-    # Folder for recorded NumPy data
-    DATA_PATH = os.path.join('recording_data')
+def setupStructure(gestures, no_videos, multicam=False):
 
     for gesture in gestures: 
         for video in range(1,no_videos+1):
@@ -13,7 +13,6 @@ def setupStructure(gestures, no_videos, multicam=False):
                 os.makedirs(os.path.join(DATA_PATH, gesture, str(video)))
                 
             except:
-                print("Passed")
                 pass
 
 if __name__ == "__main__":
