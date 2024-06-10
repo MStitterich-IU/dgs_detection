@@ -32,6 +32,8 @@ X_train, X_test, y_train, y_test = train_test_split(x, y, test_size=0.05)
 
 log_dir = os.path.join('Logs')
 tensorBoardCB = TensorBoard(log_dir=log_dir)
+earlyStopCB = EarlyStopping("val_loss", patience=5, start_from_epoch=50)
+
 
 
 #clear_session()
@@ -46,6 +48,6 @@ model.add(Dense(32, activation='relu'))
 model.add(Dense(npy.array(gestures).shape[0], activation='softmax'))
 
 model.compile(optimizer='Adam', loss='categorical_crossentropy', metrics=['categorical_accuracy'])
-model.fit(X_train, y_train, epochs=100, callbacks=[tensorBoardCB])
+model.fit(X_train, y_train, epochs=100, callbacks=[tensorBoardCB, earlyStopCB])
 
 model.save('gesture_detection_model.keras')
