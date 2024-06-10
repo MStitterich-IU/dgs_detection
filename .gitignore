@@ -1,6 +1,8 @@
 #Project files / folders
 recording_data/
 Logs/
+*.keras
+
 # Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[cod]
