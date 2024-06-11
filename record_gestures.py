@@ -93,6 +93,8 @@ def record_gestures(recordingGestures, videoCount=5, framesPerVideo=30):
         cv2.destroyAllWindows()
 
 if __name__ == '__main__':
-    recordingGestures = ['hallo']
+    recordingGestures = []
+    gesture = input("Welche Geste soll aufgenommen werden?:\n")
+    recordingGestures.append(gesture)
     record_gestures(recordingGestures)
     print('Recording finished')
