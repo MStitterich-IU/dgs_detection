@@ -34,8 +34,6 @@ log_dir = os.path.join('Logs')
 tensorBoardCB = TensorBoard(log_dir=log_dir)
 earlyStopCB = EarlyStopping("val_loss", patience=5, start_from_epoch=50)
 
-
-
 #clear_session()
 keras.utils.set_random_seed(1)
 
@@ -49,5 +47,15 @@ model.add(Dense(npy.array(gestures).shape[0], activation='softmax'))
 
 model.compile(optimizer='Adam', loss='categorical_crossentropy', metrics=['categorical_accuracy'])
 model.fit(X_train, y_train, epochs=100, callbacks=[tensorBoardCB, earlyStopCB])
+
+#Make a prediction
+prediction = model.predict(X_test)
+for i in range(0,X_test.shape[0]):
+    pred = gestures[npy.argmax(prediction[i])]
+    sol = gestures[npy.argmax(y_test[i])]
+    if pred == sol:
+        print('Correct')
+    else:
+        print('Incorrect')
 
 model.save('gesture_detection_model.keras')
