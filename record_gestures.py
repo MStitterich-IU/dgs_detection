@@ -71,7 +71,7 @@ def record_gestures(recordingGestures, videoCount=5, framesPerVideo=30):
                         cv2.putText(frame, 'for gesture {} video number {}'.format(gesture, video),
                                     (30, 60), cv2.FONT_HERSHEY_DUPLEX, 1, (255, 0, 0), 2, cv2.LINE_AA)
                         cv2.imshow('Detect gesture keypoints', frame)
-                        cv2.waitKey(0)
+                        cv2.waitKey(2000)
                     else:
                         cv2.putText(frame, 'Collecting data for gesture', (30,30),
                                     cv2.FONT_HERSHEY_DUPLEX, 1, (255, 0, 0), 2, cv2.LINE_AA)
@@ -93,6 +93,8 @@ def record_gestures(recordingGestures, videoCount=5, framesPerVideo=30):
         cv2.destroyAllWindows()
 
 if __name__ == '__main__':
-    recordingGestures = ['hallo', 'entschuldigung']
+    recordingGestures = []
+    gesture = input("Welche Geste soll aufgenommen werden?:\n")
+    recordingGestures.append(gesture)
     record_gestures(recordingGestures)
     print('Recording finished')
