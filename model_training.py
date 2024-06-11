@@ -1,6 +1,5 @@
 import numpy as npy
 import os
-import project_setup as pSetup
 
 import keras.utils
 from sklearn.model_selection import train_test_split
@@ -10,18 +9,19 @@ from keras.layers import Dense, LSTM
 from keras.callbacks import TensorBoard, EarlyStopping
 
 
-gestures = os.listdir(os.path.join(pSetup.DATA_PATH))
-framesPerVideo = len(os.listdir((os.path.join(pSetup.DATA_PATH, gestures[0], str(1)))))
+DATA_PATH = os.path.join('recording_data')
+gestures = os.listdir(os.path.join(DATA_PATH))
+framesPerVideo = len(os.listdir((os.path.join(DATA_PATH, gestures[0], str(1)))))
 labelMapping = {label:num for num, label in enumerate(gestures)}
 
 #Loading previously recorded data
 def load_data():
     videos, labels = [], []
     for gesture in gestures:
-        for video in npy.array(os.listdir(os.path.join(pSetup.DATA_PATH, gesture))).astype(int):
+        for video in npy.array(os.listdir(os.path.join(DATA_PATH, gesture))).astype(int):
             frames = []
             for frameNr in range(1, framesPerVideo+1):
-                res = npy.load(os.path.join(pSetup.DATA_PATH, gesture, str(video), "{}.npy".format(frameNr)))
+                res = npy.load(os.path.join(DATA_PATH, gesture, str(video), "{}.npy".format(frameNr)))
                 frames.append(res)
             videos.append(frames)
             labels.append(labelMapping[gesture])
