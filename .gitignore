@@ -1,5 +1,6 @@
 #Project files / folders
 recording_data/
+testing_data/
 Logs/
 *.keras
 
