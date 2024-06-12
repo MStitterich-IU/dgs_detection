@@ -51,9 +51,11 @@ def record_gestures(recordingGestures, videoCount=5, framesPerVideo=30):
 
     #Start recording process
     with holisticModel.Holistic(min_detection_confidence=0.5, min_tracking_confidence=0.5) as hModel:
-
+        
         for gesture in recordingGestures:
-            for video in range(1, videoCount+1):
+            existingDir = os.listdir(os.path.join(pSetup.DATA_PATH, gesture))
+            maxDir = max(list(map(int, existingDir)))            
+            for video in range(maxDir-videoCount+1, maxDir+1):
                 for frameNr in range(1, framesPerVideo+1):
                     # Read incoming camera frames
                     ret, frame = cameraCapture.read()
@@ -94,7 +96,8 @@ def record_gestures(recordingGestures, videoCount=5, framesPerVideo=30):
 
 if __name__ == '__main__':
     recordingGestures = []
-    gesture = input("Welche Geste soll aufgenommen werden?:\n")
+    gesture = input("Welche Geste soll aufgenommen werden?\n")
+    count = int(input("Wie viele Videos pro Geste?\n"))
     recordingGestures.append(gesture)
-    record_gestures(recordingGestures)
+    record_gestures(recordingGestures, count)
     print('Recording finished')
