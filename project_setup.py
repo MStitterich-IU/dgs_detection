@@ -6,13 +6,14 @@ DATA_PATH = os.path.join('recording_data')
 def setupStructure(gestures, videoCount, multicam=False):
     
     for gesture in gestures: 
-        existingMaxDir = 0
+        maxDir = 0
         try:
-            existingMaxDir = int(max(os.listdir(os.path.join(DATA_PATH, gesture))))            
+            existingDir = os.listdir(os.path.join(DATA_PATH, gesture))
+            maxDir = max(list(map(int, existingDir)))
         except:
             pass
 
-        for video in range(existingMaxDir + 1, existingMaxDir + videoCount+1):
+        for video in range(maxDir + 1, maxDir + videoCount+1):
             try:
                 if multicam:
                     os.makedirs(os.path.join(DATA_PATH, gesture, str(video+videoCount)))
