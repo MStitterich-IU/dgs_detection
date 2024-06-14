@@ -1,5 +1,7 @@
 import numpy as npy
 import os
+import tkinter as tk
+from tkinter import filedialog
 
 import keras.utils
 from sklearn.model_selection import train_test_split
@@ -8,51 +10,54 @@ from keras.models import Sequential
 from keras.layers import Dense, LSTM
 from keras.callbacks import TensorBoard, EarlyStopping
 
+class Model():
 
-DATA_PATH = os.path.join('recording_data')
-gestures = os.listdir(os.path.join(DATA_PATH))
-framesPerVideo = len(os.listdir((os.path.join(DATA_PATH, gestures[0], str(1)))))
-labelMapping = {label:num for num, label in enumerate(gestures)}
+    def __init__(self, data_folder):
+        self.data_path = os.path.join(data_folder)
+        self.gestures = os.listdir(os.path.join(self.data_path))
 
-#Loading previously recorded data
-def load_data():
-    videos, labels = [], []
-    for gesture in gestures:
-        for video in npy.array(os.listdir(os.path.join(DATA_PATH, gesture))).astype(int):
-            frames = []
-            for frameNr in range(1, framesPerVideo+1):
-                res = npy.load(os.path.join(DATA_PATH, gesture, str(video), "{}.npy".format(frameNr)))
-                frames.append(res)
-            videos.append(frames)
-            labels.append(labelMapping[gesture])
-    return videos, labels
+        self.model = Sequential()
+        self.model.add(LSTM(64, return_sequences=True, activation='relu', input_shape=(30,1662)))
+        self.model.add(LSTM(128, return_sequences=True, activation='relu'))
+        self.model.add(LSTM(64, return_sequences=False, activation='relu'))
+        self.model.add(Dense(64, activation='relu'))
+        self.model.add(Dense(32, activation='relu'))
+        self.model.add(Dense(npy.array(self.gestures).shape[0], activation='softmax'))
+    
+    def loadData(self):
+        self.videos, self.labels = [], []
+        framesPerVideo = len(os.listdir((os.path.join(self.data_path, self.gestures[0], str(1)))))
+        labelMapping = {label:num for num, label in enumerate(self.gestures)}
+        for gesture in self.gestures:
+            for video in npy.array(os.listdir(os.path.join(self.data_path, gesture))).astype(int):
+                frames = []
+                for frameNr in range(1, framesPerVideo+1):
+                    res = npy.load(os.path.join(self.data_path, gesture, str(video), "{}.npy".format(frameNr)))
+                    frames.append(res)
+                self.videos.append(frames)
+                self.labels.append(labelMapping[gesture])
 
-def setup_model():
-    model = Sequential()
-    model.add(LSTM(64, return_sequences=True, activation='relu', input_shape=(30,1662)))
-    model.add(LSTM(128, return_sequences=True, activation='relu'))
-    model.add(LSTM(64, return_sequences=False, activation='relu'))
-    model.add(Dense(64, activation='relu'))
-    model.add(Dense(32, activation='relu'))
-    model.add(Dense(npy.array(gestures).shape[0], activation='softmax'))
-    return model
+    def train(self):
+        self.loadData()
+        x = npy.array(self.videos)
+        y = keras.utils.to_categorical(self.labels).astype(int)
 
-videos, labels = load_data()
+        X_train, X_test, y_train, y_test = train_test_split(x, y, test_size=0.05)
 
-x = npy.array(videos)
-y = keras.utils.to_categorical(labels).astype(int)
+        log_dir = os.path.join('Logs')
+        tensorBoardCB = TensorBoard(log_dir=log_dir)
+        earlyStopCB = EarlyStopping("loss", patience=5, start_from_epoch=50)
 
-X_train, X_test, y_train, y_test = train_test_split(x, y, test_size=0.05)
+        self.model.compile(optimizer='Adam', metrics=['categorical_accuracy'], loss='categorical_crossentropy')
+        self.model.fit(X_train, y_train, epochs=10, callbacks=[tensorBoardCB, earlyStopCB])
 
-log_dir = os.path.join('Logs')
-tensorBoardCB = TensorBoard(log_dir=log_dir)
-earlyStopCB = EarlyStopping("loss", patience=5, start_from_epoch=50)
+    def saveWeights(self):
+        root = tk.Tk()
+        root.withdraw()
+        filePath = filedialog.asksaveasfilename(title="Save model weights as")
+        self.model.save(filePath)
 
-clear_session()
-keras.utils.set_random_seed(1)
-
-model = setup_model()
-model.compile(optimizer='Adam', metrics=['categorical_accuracy'], loss='categorical_crossentropy')
-model.fit(X_train, y_train, epochs=80, callbacks=[tensorBoardCB, earlyStopCB])
-
-model.save('gesture_detection_model.keras')
+if __name__ == '__main__':
+    newModel = Model('recording_data')
+    newModel.train()
+    newModel.saveWeights()
