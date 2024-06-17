@@ -11,6 +11,7 @@ class GesturePrediction(DataRecorder, Model):
     
     def record_gestures(self):
         predictions, sequence = [], []
+        predictionAccuracy = 0
         self.model.load_weights('good.keras')
         #Start recording process
         with self.holisticModel.Holistic(min_detection_confidence=0.5, min_tracking_confidence=0.5) as hModel:
@@ -31,11 +32,15 @@ class GesturePrediction(DataRecorder, Model):
                     res = self.model.predict(npy.expand_dims(sequence, axis=0))[0]
                     predictions.append(npy.argmax(res))
                     predictions = predictions [-5:]
-                    #Make sure that prediction is not just a fluke
-                    if npy.unique(predictions[-2:])[0] == npy.argmax(res):
-                        print(self.gestures[npy.argmax(res)])
+                    predictionAccuracy = res[npy.argmax(res)]
                     sequence = []
                 
+                cv2.rectangle(frame, (0, 550), (800, 600), (255, 0, 0), -1)
+
+                #Make sure that prediction is not just a fluke
+                if len(predictions) > 0 & npy.unique(predictions[-2:])[0] == npy.argmax(res):
+                    screenText = "Geste: " + self.gestures[predictions[-1]] + " Genauigkeit: " + str(predictionAccuracy)
+                    cv2.putText(frame, screenText, (10, 585), cv2.FONT_HERSHEY_DUPLEX, 1, (255,255,255), 2, cv2.LINE_AA)
                 cv2.imshow('Detecting gestures', frame)
 
                 # Quit capture gracefully by pressing ESC
