@@ -6,7 +6,7 @@ import os
 
 class DataRecorder():
     
-    def __init__(self):
+    def __init__(self, data_path):
         #Mediapipe holistic model and utilites for keypoint detection and visualization
         self.holisticModel = mp.solutions.holistic
         self.mpDrawUtil = mp.solutions.drawing_utils
@@ -15,6 +15,8 @@ class DataRecorder():
         self.cameraCapture = cv2.VideoCapture(1)
         self.cameraCapture.set(cv2.CAP_PROP_FRAME_WIDTH, 800)
         self.cameraCapture.set(cv2.CAP_PROP_FRAME_HEIGHT, 600)
+
+        self.data_path = data_path
 
     def keypoint_detection(self, frame, model):
         frame = cv2.cvtColor(frame, cv2.COLOR_BGR2RGB)
@@ -51,13 +53,13 @@ class DataRecorder():
     def record_gestures(self, recordingGestures, videoCount=5, framesPerVideo=30):
 
         #Create project recording folders
-        pSetup.setupStructure(recordingGestures, videoCount)
+        pSetup.setupStructure(self.data_path, recordingGestures, videoCount)
 
         #Start recording process
         with self.holisticModel.Holistic(min_detection_confidence=0.5, min_tracking_confidence=0.5) as hModel:
             
             for gesture in recordingGestures:
-                existingDir = os.listdir(os.path.join(pSetup.DATA_PATH, gesture))
+                existingDir = os.listdir(os.path.join(self.data_path, gesture))
                 maxDir = max(list(map(int, existingDir)))            
                 for video in range(maxDir-videoCount+1, maxDir+1):
                     for frameNr in range(1, framesPerVideo+1):
@@ -87,7 +89,7 @@ class DataRecorder():
 
                         #Read landmark values and save to file
                         lmarkValues = self.read_lmark_values(results)
-                        filePath = os.path.join(pSetup.DATA_PATH, gesture, str(video), str(frameNr))
+                        filePath = os.path.join(self.data_path, gesture, str(video), str(frameNr))
                         npy.save(filePath, lmarkValues)
 
                         # Quit capture gracefully by pressing ESC
@@ -103,6 +105,6 @@ if __name__ == '__main__':
     gesture = input("Welche Geste soll aufgenommen werden?\n")
     count = int(input("Wie viele Videos pro Geste?\n"))
     recordingGestures.append(gesture)
-    recorder = DataRecorder()
-    recorder.record_gestures(recordingGestures)
+    recorder = DataRecorder('testing_data')
+    recorder.record_gestures(recordingGestures, count)
     print('Recording finished')
