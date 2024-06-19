@@ -1,8 +1,10 @@
-import project_setup as pSetup
 import cv2
 import mediapipe as mp
 import numpy as npy
 import os
+import project_setup as pSetup
+import tkinter as tk
+from tkinter import filedialog, simpledialog
 
 class DataRecorder():
     
@@ -100,11 +102,18 @@ class DataRecorder():
             self.cameraCapture.release()
             cv2.destroyAllWindows()
 
-if __name__ == '__main__':
+def getUserInput():
     recordingGestures = []
-    gesture = input("Welche Geste soll aufgenommen werden?\n")
-    count = int(input("Wie viele Videos pro Geste?\n"))
+    root = tk.Tk()
+    root.withdraw()
+    gesture = simpledialog.askstring("Gebärde", "Welche Gebärde soll trainiert werden?")
+    count = simpledialog.askinteger("Anzahl Videos", "Wie viele Videos sollen für das Training aufgenommen werden?")
     recordingGestures.append(gesture)
-    recorder = DataRecorder('testing_data')
-    recorder.record_gestures(recordingGestures, count)
+    filePath = filedialog.askdirectory(title="Please select the training data folder")
+    return recordingGestures, count, filePath
+
+if __name__ == '__main__':
+    gestures, count, filePath = getUserInput()
+    recorder = DataRecorder(os.path.basename(filePath))
+    recorder.record_gestures(gestures, count)
     print('Recording finished')
