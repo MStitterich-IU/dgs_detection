@@ -1,6 +1,6 @@
 #Project files / folders
-recording_data/
 testing_data/
+training_data/
 Logs/
 *.keras
 models/
