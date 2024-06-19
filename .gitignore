@@ -3,6 +3,7 @@ recording_data/
 testing_data/
 Logs/
 *.keras
+models/
 
 # Byte-compiled / optimized / DLL files
 __pycache__/
