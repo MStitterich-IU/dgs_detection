@@ -31,9 +31,15 @@ class EvalModel(Model):
         ypred = npy.argmax(ypred, axis=1).tolist()
         return accuracy_score(ytrue, ypred)
 
-if __name__ == '__main__':
+def setTestingDir():
+    root = tk.Tk()
+    root.withdraw()
+    trainingDir = filedialog.askdirectory(title="Wählen Sie den Ordner mit den Testdaten aus")
+    return trainingDir
 
-    testModel = EvalModel('testing_data')
+if __name__ == '__main__':
+    data_path = setTestingDir()
+    testModel = EvalModel(data_path)
     print(testModel.evaluate())
 
 
