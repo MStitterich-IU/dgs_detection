@@ -109,7 +109,7 @@ def getUserInput():
     gesture = simpledialog.askstring("Gebärde", "Welche Gebärde soll trainiert werden?")
     count = simpledialog.askinteger("Anzahl Videos", "Wie viele Videos sollen für das Training aufgenommen werden?")
     recordingGestures.append(gesture)
-    filePath = filedialog.askdirectory(title="Please select the training data folder")
+    filePath = filedialog.askdirectory(title="Please select the data folder")
     return recordingGestures, count, filePath
 
 if __name__ == '__main__':
