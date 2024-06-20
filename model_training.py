@@ -55,7 +55,7 @@ class Model():
     def saveWeights(self):
         root = tk.Tk()
         root.withdraw()
-        filePath = filedialog.asksaveasfilename(title="Save model weights as")
+        filePath = filedialog.asksaveasfilename(title="Save model weights as", defaultextension='.keras')
         self.model.save(filePath)
 
 def setTrainingDir():
