@@ -18,7 +18,7 @@ class EvalModel(Model):
     def loadWeights(self):
         root = tk.Tk()
         root.withdraw()
-        filePath = filedialog.askopenfilename(title="Please select the model's file")
+        filePath = filedialog.askopenfilename(title="Wählen Sie die Model-Datei aus")
         self.model.load_weights(filePath)
 
     def evaluate(self):
