@@ -43,14 +43,14 @@ class Model():
         x = npy.array(self.videos)
         y = keras.utils.to_categorical(self.labels).astype(int)
 
-        X_train, X_test, y_train, y_test = train_test_split(x, y, test_size=0.05)
+        #X_train, X_test, y_train, y_test = train_test_split(x, y, test_size=0.05)
 
         log_dir = os.path.join('Logs')
         tensorBoardCB = TensorBoard(log_dir=log_dir)
         earlyStopCB = EarlyStopping("loss", patience=5, start_from_epoch=50)
 
         self.model.compile(optimizer='Adam', metrics=['categorical_accuracy'], loss='categorical_crossentropy')
-        self.model.fit(X_train, y_train, epochs=75, callbacks=[tensorBoardCB])
+        self.model.fit(x, y, epochs=150, callbacks=[tensorBoardCB, earlyStopCB])
 
     def saveWeights(self):
         root = tk.Tk()
@@ -66,6 +66,7 @@ def setTrainingDir():
 
 if __name__ == '__main__':
     trainingDir = setTrainingDir()
-    newModel = Model(trainingDir)
-    newModel.train()
-    newModel.saveWeights()
+    for i in range(1, 7):
+        newModel = Model(trainingDir)
+        newModel.train()
+        newModel.saveWeights()
