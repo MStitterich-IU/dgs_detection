@@ -7,17 +7,18 @@ import keras.utils
 from sklearn.model_selection import train_test_split
 from keras.src.backend.common.global_state import clear_session
 from keras.models import Sequential
-from keras.layers import Dense, LSTM
+from keras.layers import Dense, LSTM, Input
 from keras.callbacks import TensorBoard, EarlyStopping
 
 class Model():
 
     def __init__(self, data_folder):
-        self.data_path = os.path.join(data_folder)
-        self.gestures = os.listdir(os.path.join(self.data_path))
+        self.data_path = data_folder
+        self.gestures = os.listdir(self.data_path)
 
         self.model = Sequential()
-        self.model.add(LSTM(64, return_sequences=True, activation='relu', input_shape=(30,1662)))
+        self.model.add(Input(shape=(30,1662)))
+        self.model.add(LSTM(64, return_sequences=True, activation='relu'))
         self.model.add(LSTM(128, return_sequences=True, activation='relu'))
         self.model.add(LSTM(64, return_sequences=False, activation='relu'))
         self.model.add(Dense(64, activation='relu'))
@@ -49,15 +50,22 @@ class Model():
         earlyStopCB = EarlyStopping("loss", patience=5, start_from_epoch=50)
 
         self.model.compile(optimizer='Adam', metrics=['categorical_accuracy'], loss='categorical_crossentropy')
-        self.model.fit(X_train, y_train, epochs=10, callbacks=[tensorBoardCB, earlyStopCB])
+        self.model.fit(X_train, y_train, epochs=75, callbacks=[tensorBoardCB])
 
     def saveWeights(self):
         root = tk.Tk()
         root.withdraw()
-        filePath = filedialog.asksaveasfilename(title="Save model weights as")
+        filePath = filedialog.asksaveasfilename(title="Save model weights as", defaultextension='.keras')
         self.model.save(filePath)
 
+def setTrainingDir():
+    root = tk.Tk()
+    root.withdraw()
+    trainingDir = filedialog.askdirectory(title="Wählen Sie den Ordner mit den Trainingsdaten aus")
+    return trainingDir
+
 if __name__ == '__main__':
-    newModel = Model('recording_data')
+    trainingDir = setTrainingDir()
+    newModel = Model(trainingDir)
     newModel.train()
     newModel.saveWeights()

@@ -1,14 +1,11 @@
 import os
 
-# Folder for recorded NumPy data
-DATA_PATH = os.path.join('recording_data')
-
-def setupStructure(gestures, videoCount, multicam=False):
+def setupStructure(data_path, gestures, videoCount, multicam=False):
     
     for gesture in gestures: 
         maxDir = 0
         try:
-            existingDir = os.listdir(os.path.join(DATA_PATH, gesture))
+            existingDir = os.listdir(os.path.join(data_path, gesture))
             maxDir = max(list(map(int, existingDir)))
         except:
             pass
@@ -16,8 +13,8 @@ def setupStructure(gestures, videoCount, multicam=False):
         for video in range(maxDir + 1, maxDir + videoCount+1):
             try:
                 if multicam:
-                    os.makedirs(os.path.join(DATA_PATH, gesture, str(video+videoCount)))
-                os.makedirs(os.path.join(DATA_PATH, gesture, str(video)))
+                    os.makedirs(os.path.join(data_path, gesture, str(video+videoCount)))
+                os.makedirs(os.path.join(data_path, gesture, str(video)))
                 
             except:
                 pass
