@@ -114,6 +114,6 @@ def getUserInput():
 
 if __name__ == '__main__':
     gestures, count, filePath = getUserInput()
-    recorder = DataRecorder(os.path.basename(filePath))
+    recorder = DataRecorder(filePath)
     recorder.record_gestures(gestures, count)
     print('Recording finished')
