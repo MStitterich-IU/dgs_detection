@@ -42,8 +42,6 @@ class GesturePrediction(DataRecorder, Model):
                 #Predict gesture after 30 recorded frames
                 if len(sequence) == 30:
                     res = self.model.predict(npy.expand_dims(sequence, axis=0))[0]
-                    #predictions.append(npy.argmax(res))
-                    #predictions = predictions [-5:]
                     predictionAccuracy = res[npy.argmax(res)]
                     if predictionAccuracy < threshold:
                         sequence = []
@@ -57,9 +55,6 @@ class GesturePrediction(DataRecorder, Model):
                     cv2.waitKey(1000)
                     sequence = []
                     continue
-                
-                
-
 
                 cv2.imshow('Detecting gestures', frame)
 
@@ -69,9 +64,6 @@ class GesturePrediction(DataRecorder, Model):
                     self.cameraCapture.release()
                     cv2.destroyAllWindows()
                     return
-
-            
-
 
 if __name__ == '__main__':
     prediction = GesturePrediction()
