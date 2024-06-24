@@ -2,17 +2,27 @@ from record_gestures import DataRecorder
 from model_training import Model
 import cv2
 import numpy as npy
+import os
+import tkinter as tk
+from tkinter import filedialog
 
 class GesturePrediction(DataRecorder, Model):
 
     def __init__(self):
-        DataRecorder.__init__(self)
-        Model.__init__(self, data_folder='testing_data')
+        DataRecorder.__init__(self, 'training_data')
+        Model.__init__(self, os.path.join('training_data', 'training_data_leadingAnim_noHands'))
+
+    def load_model_weights(self):
+        root = tk.Tk()
+        root.withdraw()
+        filePath = filedialog.askopenfilename(title="Please select the model's file")
+        self.model.load_weights(filePath)
     
     def record_gestures(self):
-        predictions, sequence = [], []
+        sequence = []
         predictionAccuracy = 0
-        self.model.load_weights('good.keras')
+        threshold = 0.7
+        self.load_model_weights()
         #Start recording process
         with self.holisticModel.Holistic(min_detection_confidence=0.5, min_tracking_confidence=0.5) as hModel:
             while self.cameraCapture.isOpened():
@@ -26,21 +36,31 @@ class GesturePrediction(DataRecorder, Model):
                 #Read landmark values
                 lmarkValues = self.read_lmark_values(results)
                 sequence.append(lmarkValues)
+
+                cv2.rectangle(frame, (0, 550), (800, 600), (255, 0, 0), -1)
                 
                 #Predict gesture after 30 recorded frames
                 if len(sequence) == 30:
                     res = self.model.predict(npy.expand_dims(sequence, axis=0))[0]
-                    predictions.append(npy.argmax(res))
-                    predictions = predictions [-5:]
+                    #predictions.append(npy.argmax(res))
+                    #predictions = predictions [-5:]
                     predictionAccuracy = res[npy.argmax(res)]
-                    sequence = []
-                
-                cv2.rectangle(frame, (0, 550), (800, 600), (255, 0, 0), -1)
-
-                #Make sure that prediction is not just a fluke
-                if len(predictions) > 0 and npy.unique(predictions[-2:])[0] == npy.argmax(res):
-                    screenText = "Geste: " + self.gestures[predictions[-1]] + " Genauigkeit: " + str(predictionAccuracy)
+                    if predictionAccuracy < threshold:
+                        sequence = []
+                        continue
+                    #Make sure that prediction is not just a fluke
+                    #if npy.unique(predictions[-2:])[0] == npy.argmax(res):
+                    screenText = "Geste: " + self.gestures[npy.argmax(res)] + " Genauigkeit: " + str(predictionAccuracy)
+                    
                     cv2.putText(frame, screenText, (10, 585), cv2.FONT_HERSHEY_DUPLEX, 1, (255,255,255), 2, cv2.LINE_AA)
+                    cv2.imshow('Detecting gestures', frame)
+                    cv2.waitKey(1000)
+                    sequence = []
+                    continue
+                
+                
+
+
                 cv2.imshow('Detecting gestures', frame)
 
                 # Quit capture gracefully by pressing ESC
