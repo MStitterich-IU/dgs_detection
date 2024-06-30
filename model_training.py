@@ -4,7 +4,6 @@ import tkinter as tk
 from tkinter import filedialog
 
 import keras.utils
-from sklearn.model_selection import train_test_split
 from keras.src.backend.common.global_state import clear_session
 from keras.models import Sequential
 from keras.layers import Dense, LSTM, Input
@@ -43,14 +42,12 @@ class Model():
         x = npy.array(self.videos)
         y = keras.utils.to_categorical(self.labels).astype(int)
 
-        X_train, X_test, y_train, y_test = train_test_split(x, y, test_size=0.05)
-
         log_dir = os.path.join('Logs')
         tensorBoardCB = TensorBoard(log_dir=log_dir)
-        earlyStopCB = EarlyStopping("loss", patience=5, start_from_epoch=50)
+        earlyStopCB = EarlyStopping("loss", patience=3, start_from_epoch=20)
 
         self.model.compile(optimizer='Adam', metrics=['categorical_accuracy'], loss='categorical_crossentropy')
-        self.model.fit(X_train, y_train, epochs=75, callbacks=[tensorBoardCB])
+        return self.model.fit(x, y, epochs=100, callbacks=[tensorBoardCB, earlyStopCB])
 
     def saveWeights(self):
         root = tk.Tk()
@@ -66,6 +63,11 @@ def setTrainingDir():
 
 if __name__ == '__main__':
     trainingDir = setTrainingDir()
-    newModel = Model(trainingDir)
-    newModel.train()
-    newModel.saveWeights()
+    modelPath = os.path.join(os.getcwd(), 'models', 'leadingAnim_noHands', 'multi_cam')
+    for i in range(32,41):
+        clear_session()
+        newModel = Model(trainingDir)
+        history = newModel.train()
+        with open(os.path.join(modelPath, 'trainingHistory.txt'), 'a') as trainingHistory:
+            trainingHistory.write('Iteration {}: {} Epochs\n'.format(i, len(history.history['loss'])))
+        newModel.model.save(os.path.join(modelPath, 'model{}.keras'.format(i)))
