@@ -1,7 +1,8 @@
-# Sign Language Detection via Action Recognition
+# DGS Detection
 ## Overview
-This repository contains the prototype of a solution designed to detect and recognize sign language gestures through action recognition.
-The prototype supports the recording of training data, creating a Sequential machine learning model and training it with the previously
-recorded data. In a final step the model can be used to perform sign language gestures in front of a camera and tell the user what gesture
-it recognized. The main focus of the project has been the German sign language (DGS), but its functionality can easily be used for other
-sign languages as well.
+The DGS detection project contains the prototype of a solution designed to detect and recognize sign language gestures through action
+recognition. Using a LSTM model, it can be trained with previously recorded video frames which in turn can be used for live detection and
+recognition of sign language gestures in front of a camera.
+
+While the project was initially designed to work with the German sign language (abbreviated as DGS), its functionality can easily be
+transferred to any other sign language that utilizes hand and arm gestures for letters, words or full expressions.
