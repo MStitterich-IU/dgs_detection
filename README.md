@@ -6,3 +6,15 @@ recognition of sign language gestures in front of a camera.
 
 While the project was initially designed to work with the German sign language (abbreviated as DGS), its functionality can easily be
 transferred to any other sign language that utilizes hand and arm gestures for letters, words or full expressions.
+
+## Features
+- Folder structure setup
+- Recording of training data
+- Building and training an LSTM model
+- Evaluate the model's accuracy
+- Live detection and recognition of trained gestures
+
+## Dependencies
+
+
+## Installation
