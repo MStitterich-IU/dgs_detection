@@ -24,12 +24,12 @@ transferred to any other sign language that utilizes hand and arm gestures for l
 - [`Tkinter`](https://docs.python.org/3/library/tkinter.html) &ge; 8.6.12
 
 ## Installation
-The following steps will guide you through the installation process for the DGS detection prototype.
+The following steps will guide users through the installation process for the DGS detection prototype.
 
 ### Prerequesites
 - Python 3.x: Please download and install the latest version from the [official website](https://www.python.org/)
 - pip: Package installer for Python, usually included with the Python installation
-- Tkinter: If not included with the Python installation, please use your package manager for download and installation
+- Tkinter: If not included with the Python installation, please use the local package manager for download and installation
 
   ```
   # Example on Ubuntu / Debian:
@@ -37,7 +37,7 @@ The following steps will guide you through the installation process for the DGS 
   sudo apt-get install python3-tk
   ```
 ### Clone the Repository
-Using your git installation, please clone the repository to your local machine:
+Using the local git installation, please clone the repository:
 
 ```
 git clone https://github.com/MStitterich-IU/dgs_detection.git
@@ -57,6 +57,29 @@ Using the requirements.txt file from this repository, install the dependencies u
 ```
 pip install -r requirements.txt
 ```
-This will make sure that all required packages like NumPy, OpenCV, MediaPipe etc. are available in your environment.
+This will make sure that all required packages like NumPy, OpenCV, MediaPipe etc. are available in the environment.
 
 ## Usage
+The steps below describe how to use the prototype for sign language recognition.
+
+### Record Data
+By executing `record_gestures.py` users will be presented with prompts, asking what gesture will be recorded and how many videos:
+
+![Gesture Prompt](https://github.com/MStitterich-IU/dgs_detection/assets/119433042/be68253c-7108-491d-8299-9af5469b8152)
+![Count Prompt](https://github.com/MStitterich-IU/dgs_detection/assets/119433042/f5fd62a7-d0fd-444b-bda6-572a9757779b)
+
+This is followed by a prompt which simply lets users select where to store the previously recorded data.
+Afterwards another window will open, showing the current image recorded by the camera. It will inform users what gesture is about to be 
+recorded and which video number the recording is at.
+
+![DataRecording](https://github.com/MStitterich-IU/dgs_detection/assets/119433042/db82d046-404f-4c0e-b700-8afc32aefe7a)
+
+Now the application will loop through the amount of videos specified, letting users record the gesture multiple times in quick succession.
+Between each video recording users will get two seconds of time to adjust their hand / arm position and pose to a neutral stance.  
+If this preparation time is too long it can be skipped by pressing any keyon a keyboard.
+
+### Train Model
+
+### Evaluation
+
+### Live Gesture Recognition
