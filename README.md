@@ -90,5 +90,13 @@ designated folder. Depending on the amount of training data, iterations and avai
 iteration will save its results in a log file in the same folder as the one in which the models are stored.
 
 ### Evaluation
+In order to figure out the prediction accuracy of a trained model the `model_evaluation.py' file can be executed. It will asks users to select a folder where
+testing data has been stored. These recordings should **not** be the same as the training data used for training the model but separate recordings. In addition
+users will be prompted to pick a model that they want to evaluate.  
+
+The evaluation procedure will use the selected model to try and predict the gestures that were performed in the testing data. After it has finished going through
+all the available testing data it will print out the accuracy score of the model's predictions.
 
 ### Live Gesture Recognition
+
+## Limitations
