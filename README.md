@@ -79,6 +79,15 @@ Between each video recording users will get two seconds of time to adjust their 
 If this preparation time is too long it can be skipped by pressing any keyon a keyboard.
 
 ### Train Model
+Training the LSTM model can be done by executing `model_training.py`. It will prompt the user for various inputs, similarly to the "Record Data" step:
+
+- Select the folder where the training data is stored
+- Put in the number of required training iterations
+- Select the folder for storing the trained model weights / files
+
+With these inputs provided the prototype will start training for as many iterations as users have requested. Each model's weights will be stored in the
+designated folder. Depending on the amount of training data, iterations and available computing power this may take a considerable amount of time. Each
+iteration will save its results in a log file in the same folder as the one in which the models are stored.
 
 ### Evaluation
 
