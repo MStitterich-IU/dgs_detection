@@ -11,9 +11,12 @@ from keras.callbacks import TensorBoard, EarlyStopping
 
 class Model():
 
-    def __init__(self, data_folder):
+    def __init__(self, data_folder=None):
         self.data_path = data_folder
-        self.gestures = os.listdir(self.data_path)
+        if self.data_path:
+            self.gestures = os.listdir(self.data_path)
+            outputCount = npy.array(self.gestures).shape[0]
+        outputCount = self.getGestureCount()
 
         self.model = Sequential()
         self.model.add(Input(shape=(30,1662)))
@@ -22,8 +25,14 @@ class Model():
         self.model.add(LSTM(64, return_sequences=False, activation='relu'))
         self.model.add(Dense(64, activation='relu'))
         self.model.add(Dense(32, activation='relu'))
-        self.model.add(Dense(npy.array(self.gestures).shape[0], activation='softmax'))
+        self.model.add(Dense(outputCount, activation='softmax'))
     
+    def getGestureCount(self):
+        root = tk.Tk()
+        root.withdraw()
+        gestureCount = simpledialog.askinteger("Gesture Count", "How many gestures can the model detect?")
+        return gestureCount
+        
     def loadData(self):
         self.videos, self.labels = [], []
         framesPerVideo = len(os.listdir((os.path.join(self.data_path, self.gestures[0], str(1)))))
@@ -67,7 +76,7 @@ if __name__ == '__main__':
     trainingDir, iterCount, modelDir = getUserInput()
     for i in range(1,iterCount+1):
         clear_session()
-        newModel = Model(trainingDir)
+        newModel = Model(data_folder=trainingDir)
         history = newModel.train()
         with open(os.path.join(modelDir, 'trainingHistory.txt'), 'a') as trainingHistory:
             trainingHistory.write('Iteration {}: {} Epochs\n'.format(i, len(history.history['loss'])))

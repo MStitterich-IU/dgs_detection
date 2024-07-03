@@ -9,7 +9,7 @@ from tkinter import filedialog, simpledialog
 
 class DataRecorder():
     
-    def __init__(self, data_path, multicam=False):
+    def __init__(self, data_path=None, multicam=False):
 
         self.data_path = data_path
         self.multicam = multicam
@@ -165,7 +165,7 @@ def getUserInput():
 
 if __name__ == '__main__':
     gestures, count, filePath = getUserInput()
-    recorder = DataRecorder(filePath, multicam=False)
+    recorder = DataRecorder(data_path=filePath, multicam=False)
     recorder.record_gestures(gestures, count)
     print('Recording finished')
  
