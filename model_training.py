@@ -1,7 +1,7 @@
 import numpy as npy
 import os
 import tkinter as tk
-from tkinter import filedialog
+from tkinter import filedialog, simpledialog
 
 import keras.utils
 from keras.src.backend.common.global_state import clear_session
@@ -55,19 +55,20 @@ class Model():
         filePath = filedialog.asksaveasfilename(title="Save model weights as", defaultextension='.keras')
         self.model.save(filePath)
 
-def setTrainingDir():
+def getUserInput():
     root = tk.Tk()
     root.withdraw()
-    trainingDir = filedialog.askdirectory(title="Wählen Sie den Ordner mit den Trainingsdaten aus")
-    return trainingDir
+    trainingDir = filedialog.askdirectory(title="Select the folder containing the training data")
+    iterCount = simpledialog.askinteger("Iteration Count", "How many training iterations do you want to run?")
+    modelDir = filedialog.askdirectory(title="Select the folder for storing the trained models")
+    return trainingDir, iterCount, modelDir
 
 if __name__ == '__main__':
-    trainingDir = setTrainingDir()
-    modelPath = os.path.join(os.getcwd(), 'models', 'leadingAnim_noHands', 'multi_cam')
-    for i in range(32,41):
+    trainingDir, iterCount, modelDir = getUserInput()
+    for i in range(1,iterCount+1):
         clear_session()
         newModel = Model(trainingDir)
         history = newModel.train()
-        with open(os.path.join(modelPath, 'trainingHistory.txt'), 'a') as trainingHistory:
+        with open(os.path.join(modelDir, 'trainingHistory.txt'), 'a') as trainingHistory:
             trainingHistory.write('Iteration {}: {} Epochs\n'.format(i, len(history.history['loss'])))
-        newModel.model.save(os.path.join(modelPath, 'model{}.keras'.format(i)))
+        newModel.model.save(os.path.join(modelDir, 'model{}.keras'.format(i)))
