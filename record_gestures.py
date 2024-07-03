@@ -120,8 +120,8 @@ class DataRecorder():
                             if frameNr == 1: 
                                 cv2.putText(frame, 'Press key to start collecting data', (30,30),
                                             cv2.FONT_HERSHEY_DUPLEX, 1, (255, 0, 0), 2, cv2.LINE_AA)
-                                cv2.putText(frame, 'for gesture {} video number {}'.format(gesture, video),
-                                            (30, 60), cv2.FONT_HERSHEY_DUPLEX, 1, (255, 0, 0), 2, cv2.LINE_AA)
+                                cv2.putText(frame, 'for gesture "{}"; Video number {}'.format(gesture, video),
+                                            (30, 65), cv2.FONT_HERSHEY_DUPLEX, 1, (255, 0, 0), 2, cv2.LINE_AA)
                                 cv2.imshow('Camera 1', frame)
                                 if self.multicam:
                                     cv2.imshow('Camera 2', frame2)
@@ -129,8 +129,8 @@ class DataRecorder():
                             else:
                                 cv2.putText(frame, 'Collecting data for gesture', (30,30),
                                             cv2.FONT_HERSHEY_DUPLEX, 1, (255, 0, 0), 2, cv2.LINE_AA)
-                                cv2.putText(frame, '{} video number {}'.format(gesture, video),
-                                            (30, 60), cv2.FONT_HERSHEY_DUPLEX, 1, (255, 0, 0), 2, cv2.LINE_AA)
+                                cv2.putText(frame, '"{}"; Video number {}'.format(gesture, video),
+                                            (30, 65), cv2.FONT_HERSHEY_DUPLEX, 1, (255, 0, 0), 2, cv2.LINE_AA)
                                 cv2.imshow('Camera 1', frame)
                                 if self.multicam:
                                     cv2.imshow('Camera 2', frame2)
@@ -157,15 +157,15 @@ def getUserInput():
     recordingGestures = []
     root = tk.Tk()
     root.withdraw()
-    gesture = simpledialog.askstring("Gebärde", "Welche Gebärde soll trainiert werden?")
-    count = simpledialog.askinteger("Anzahl Videos", "Wie viele Videos sollen für das Training aufgenommen werden?")
+    gesture = simpledialog.askstring("Gesture", "What gesture do you want to record?")
+    count = simpledialog.askinteger("Video Count", "How many training videos do you want to record?")
     recordingGestures.append(gesture)
     filePath = filedialog.askdirectory(title="Please select the data folder")
     return recordingGestures, count, filePath
 
 if __name__ == '__main__':
     gestures, count, filePath = getUserInput()
-    recorder = DataRecorder(filePath, multicam=True)
+    recorder = DataRecorder(filePath, multicam=False)
     recorder.record_gestures(gestures, count)
     print('Recording finished')
  
