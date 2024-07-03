@@ -18,7 +18,7 @@ class EvalModel(Model):
     def loadWeights(self):
         root = tk.Tk()
         root.withdraw()
-        filePath = filedialog.askopenfilename(title="Wählen Sie die Model-Datei aus")
+        filePath = filedialog.askopenfilename(title="Please choose the model to evaluate")
         self.model.load_weights(filePath)
 
     def evaluate(self):
@@ -34,7 +34,7 @@ class EvalModel(Model):
 def setTestingDir():
     root = tk.Tk()
     root.withdraw()
-    trainingDir = filedialog.askdirectory(title="Wählen Sie den Ordner mit den Testdaten aus")
+    trainingDir = filedialog.askdirectory(title="Select the folder containing the testing data")
     return trainingDir
 
 if __name__ == '__main__':
