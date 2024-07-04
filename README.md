@@ -9,7 +9,7 @@ transferred to any other sign language that utilizes hand and arm gestures for l
 
 ## Table of Contents
 
-- [Features](https://github.com/MStitterich-IU/dgs_detection?tab=readme-ov-file#features)  
+- [Features](#features)  
 - [Dependencies](https://github.com/MStitterich-IU/dgs_detection?tab=readme-ov-file#dependencies)  
 - [Installation](https://github.com/MStitterich-IU/dgs_detection?tab=readme-ov-file#installation)  
   - [Prerequisites](https://github.com/MStitterich-IU/dgs_detection?tab=readme-ov-file#prerequesites)  
