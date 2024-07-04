@@ -54,7 +54,7 @@ class GesturePrediction(DataRecorder, Model):
                         continue
                     #Make sure that prediction is not just a fluke
                     #if npy.unique(predictions[-2:])[0] == npy.argmax(res):
-                    screenText = "Geste: " + self.gestures[npy.argmax(res)] + " Genauigkeit: " + str(predictionAccuracy)
+                    screenText = "Gesture: " + self.gestures[npy.argmax(res)] + " Accuracy: " + str("%.2f" % predictionAccuracy)
                     
                     cv2.putText(frame, screenText, (10, 585), cv2.FONT_HERSHEY_DUPLEX, 1, (255,255,255), 2, cv2.LINE_AA)
                     cv2.imshow('Detecting gestures', frame)
