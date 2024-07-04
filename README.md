@@ -12,7 +12,7 @@ transferred to any other sign language that utilizes hand and arm gestures for l
 - [Features](#features)  
 - [Dependencies](#dependencies)  
 - [Installation](#installation)  
-  - [Prerequisites](#prerequesites)  
+  - [Prerequisites](#prerequisites)  
   - [Clone the Repository](#clone-the-repository)  
   - [(Optional) Create a Virtual Environment](#optional-create-a-virtual-environment)  
   - [Install the Dependencies](#install-the-dependencies)  
