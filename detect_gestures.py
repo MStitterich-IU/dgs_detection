@@ -9,14 +9,20 @@ from tkinter import filedialog
 class GesturePrediction(DataRecorder, Model):
 
     def __init__(self):
-        DataRecorder.__init__(self, 'training_data')
-        Model.__init__(self, os.path.join('training_data', 'training_data_leadingAnim_noHands'))
+        DataRecorder.__init__(self)
+        Model.__init__(self, self.load_gestures())
 
     def load_model_weights(self):
         root = tk.Tk()
         root.withdraw()
         filePath = filedialog.askopenfilename(title="Please select the model's file")
         self.model.load_weights(filePath)
+    
+    def load_gestures(self):
+        root = tk.Tk()
+        root.withdraw()
+        gesturesPath = filedialog.askdirectory(title="Please select the folder containing the training data")
+        return gesturesPath
     
     def record_gestures(self):
         sequence = []
