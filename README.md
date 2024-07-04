@@ -13,9 +13,9 @@ transferred to any other sign language that utilizes hand and arm gestures for l
 - [Dependencies](#dependencies)  
 - [Installation](#installation)  
   - [Prerequisites](#prerequisites)  
-  - [Clone the Repository](#clone-the-repository)  
-  - [(Optional) Create a Virtual Environment](#optional-create-a-virtual-environment)  
-  - [Install the Dependencies](#install-the-dependencies)  
+  - [Clone Repository](#clone-repository)  
+  - [(Optional) Create Virtual Environment](#optional-create-virtual-environment)  
+  - [Install Dependencies](#install-dependencies)  
 - [Usage](#usage)  
   - [Record Data](#record-data)  
   - [Train Model](#train-model)  
@@ -52,14 +52,14 @@ The following steps will guide users through the installation process for the DG
   
   sudo apt-get install python3-tk
   ```
-### Clone the Repository
+### Clone Repository
 Using the local git installation, please clone the repository:
 
 ```
 git clone https://github.com/MStitterich-IU/dgs_detection.git
 ```
 
-### (Optional) Create a Virtual Environment
+### (Optional) Create Virtual Environment
 In order to separate the required dependencies from potentially existing installations, please create a virtual environment inside the project directory.
 ```
 # Example on Debian / Ubuntu
@@ -67,7 +67,7 @@ In order to separate the required dependencies from potentially existing install
 python3 -m venv .venv  # Creates the virtual environment as .venv
 source .venv/bin/activate  # Activates the virtual environment
 ```
-### Install the Dependencies
+### Install Dependencies
 Using the requirements.txt file from this repository, install the dependencies using pip:
 
 ```
@@ -125,3 +125,13 @@ that its prediction is accurate) the application will show it by showing the ges
 ![LiveDetectionSmall](https://github.com/MStitterich-IU/dgs_detection/assets/119433042/4a47111c-5762-46a0-9637-41aaff31c7eb)
 
 ## Limitations
+This project is supposed to be a prototype showing off the possibilites of sign language recognition through action detection. Due to its nature the prototype comes with
+certain limitations in terms of functionality and usability. The following points offer a non-exhaustive list describing known limitations.
+
+- no main user client or GUI tying all features together
+- camera index cannot be set dynamically
+- choice of single- or multi-camera recording has to be made in code
+- multi-camera recording is limited to two cameras at a time
+- no fine-tuning of the layers and nodes in the model
+- for cross-validation only the holdout method has been implemented
+- model evaluation has to be done one by one
