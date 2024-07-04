@@ -11,12 +11,10 @@ from keras.callbacks import TensorBoard, EarlyStopping
 
 class Model():
 
-    def __init__(self, data_folder=None):
+    def __init__(self, data_folder):
         self.data_path = data_folder
-        if self.data_path:
-            self.gestures = os.listdir(self.data_path)
-            outputCount = npy.array(self.gestures).shape[0]
-        outputCount = self.getGestureCount()
+        self.gestures = os.listdir(self.data_path)
+        self.outputCount = npy.array(self.gestures).shape[0]
 
         self.model = Sequential()
         self.model.add(Input(shape=(30,1662)))
@@ -25,7 +23,7 @@ class Model():
         self.model.add(LSTM(64, return_sequences=False, activation='relu'))
         self.model.add(Dense(64, activation='relu'))
         self.model.add(Dense(32, activation='relu'))
-        self.model.add(Dense(outputCount, activation='softmax'))
+        self.model.add(Dense(self.outputCount, activation='softmax'))
     
     def getGestureCount(self):
         root = tk.Tk()
