@@ -92,7 +92,7 @@ recorded and which video number the recording is at.
 
 Now the application will loop through the amount of videos specified, letting users record the gesture multiple times in quick succession.
 Between each video recording users will get two seconds of time to adjust their hand / arm position and pose to a neutral stance.  
-If this preparation time is too long it can be skipped by pressing any keyon a keyboard.
+If this preparation time is too long it can be skipped by pressing any key on a keyboard.
 
 ### Train Model
 Training the LSTM model can be done by executing `model_training.py`. It will prompt the user for various inputs, similarly to the "Record Data" step:
@@ -106,7 +106,7 @@ designated folder. Depending on the amount of training data, iterations and avai
 iteration will save its results in a log file in the same folder as the one in which the models are stored.
 
 ### Evaluation
-In order to figure out the prediction accuracy of a trained model the `model_evaluation.py' file can be executed. It will asks users to select a folder where
+To figure out the prediction accuracy of a trained model the `model_evaluation.py' file can be executed. It will ask users to select a folder where
 testing data has been stored. These recordings should **not** be the same as the training data used for training the model but separate recordings. In addition
 users will be prompted to pick a model that they want to evaluate.  
 
@@ -114,5 +114,14 @@ The evaluation procedure will use the selected model to try and predict the gest
 all the available testing data it will print out the accuracy score of the model's predictions.
 
 ### Live Gesture Recognition
+With the models trained and a suitably accurate one selected the live recognition of sign language can be performed. For that, users have to execute `detect_gestures.py`
+and answer the prompts presented to them. Those include choosing the directory containing the training data folders, which is required for the application to derive 
+the gestures it is supposed to recognize. Furthermore, the model for predicting the gestures needs to be selected as well.  
+
+Afterwards a window will open, again showing the live recording of the attached camera. Users can now position themselves in front of the camera and start performing
+the sign language gestures with which the model was trained. When the model predicts a gesture with enough certainty (by default it needs to be at least 70% certain
+that its prediction is accurate) the application will show it by showing the gesture and the prediction accuracy on screen.
+
+![LiveDetectionSmall](https://github.com/MStitterich-IU/dgs_detection/assets/119433042/4a47111c-5762-46a0-9637-41aaff31c7eb)
 
 ## Limitations
