@@ -1,11 +1,27 @@
 # DGS Detection
-## Overview
+## About
 The DGS detection project contains the prototype of a solution designed to detect and recognize sign language gestures through action
 recognition. Using a LSTM model, it can be trained with previously recorded video frames which in turn can be used for live detection and
 recognition of sign language gestures in front of a camera.
 
 While the project was initially designed to work with the German sign language (or DGS for short), its functionality can easily be
 transferred to any other sign language that utilizes hand and arm gestures for letters, words or full expressions.
+
+## Table of Contents
+
+- [Features](https://github.com/MStitterich-IU/dgs_detection?tab=readme-ov-file#features)  
+- [Dependencies](https://github.com/MStitterich-IU/dgs_detection?tab=readme-ov-file#dependencies)  
+- [Installation](https://github.com/MStitterich-IU/dgs_detection?tab=readme-ov-file#installation)  
+  - [Prerequisites](https://github.com/MStitterich-IU/dgs_detection?tab=readme-ov-file#prerequesites)  
+  - [Clone the Repository](https://github.com/MStitterich-IU/dgs_detection?tab=readme-ov-file#clone-the-repository)  
+  - [(Optional) Create a Virtual Environment](https://github.com/MStitterich-IU/dgs_detection?tab=readme-ov-file#optional-create-a-virtual-environment)  
+  - [Install the Dependencies](https://github.com/MStitterich-IU/dgs_detection?tab=readme-ov-file#install-the-dependencies)  
+- [Usage](https://github.com/MStitterich-IU/dgs_detection?tab=readme-ov-file#usage)  
+  - [Record Data](https://github.com/MStitterich-IU/dgs_detection?tab=readme-ov-file#record-data)  
+  - [Train Model](https://github.com/MStitterich-IU/dgs_detection?tab=readme-ov-file#train-model)  
+  - [Evaluation](https://github.com/MStitterich-IU/dgs_detection?tab=readme-ov-file#evaluation)  
+  - [Live Gesture Recognition](https://github.com/MStitterich-IU/dgs_detection?tab=readme-ov-file#live-gesture-recognition)  
+- [Limitations](https://github.com/MStitterich-IU/dgs_detection?tab=readme-ov-file#limitations)  
 
 ## Features
 - Recording of training data (single or multiple cameras)
@@ -26,7 +42,7 @@ transferred to any other sign language that utilizes hand and arm gestures for l
 ## Installation
 The following steps will guide users through the installation process for the DGS detection prototype.
 
-### Prerequesites
+### Prerequisites
 - Python 3.x: Please download and install the latest version from the [official website](https://www.python.org/)
 - pip: Package installer for Python, usually included with the Python installation
 - Tkinter: If not included with the Python installation, please use the local package manager for download and installation
