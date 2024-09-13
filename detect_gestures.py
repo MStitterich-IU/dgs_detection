@@ -24,6 +24,24 @@ class GesturePrediction(DataRecorder, Model):
         gesturesPath = filedialog.askdirectory(title="Please select the folder containing the training data")
         return gesturesPath
     
+    def visualize_lmarks(self, frame, results, camNr=1):
+        #Drawing specs for changing the  presentation style
+        POSE_LMARK = self.mpDrawUtil.DrawingSpec(color=(168,52,50), thickness=2, circle_radius=3)
+        POSE_CONN = self.mpDrawUtil.DrawingSpec(color=(50,50,168), thickness=2, circle_radius=2)
+        HAND_LMARK = self.mpDrawUtil.DrawingSpec(color=(134,109,29), thickness=2, circle_radius=3)
+        HAND_CONN = self.mpDrawUtil.DrawingSpec(color=(161,161,160), thickness=2, circle_radius=2)
+
+        # Visualize face contours
+        #mpDrawUtil.draw_landmarks(frame, results.face_landmarks, holisticModel.FACEMESH_CONTOURS)
+        
+        # Posture landmarks
+        self.mpDrawUtil.draw_landmarks(frame, results.pose_landmarks, self.holisticModel.POSE_CONNECTIONS, POSE_LMARK, POSE_CONN) 
+        # Left hand connections
+        self.mpDrawUtil.draw_landmarks(frame, results.left_hand_landmarks, self.holisticModel.HAND_CONNECTIONS, HAND_LMARK, HAND_CONN) 
+        # Right hand connections
+        self.mpDrawUtil.draw_landmarks(frame, results.right_hand_landmarks, self.holisticModel.HAND_CONNECTIONS, HAND_LMARK, HAND_CONN) 
+
+    
     def record_gestures(self):
         sequence = []
         predictionAccuracy = 0
@@ -38,6 +56,9 @@ class GesturePrediction(DataRecorder, Model):
 
                 #Detect and process gesture keypoints
                 frame, results = self.keypoint_detection(frame, hModel)
+
+                #Visualize keypoints and connections
+                self.visualize_lmarks(frame, results)
 
                 #Read landmark values
                 lmarkValues = self.read_lmark_values(results)
