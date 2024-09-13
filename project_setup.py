@@ -1,19 +1,20 @@
 import os
 
-def setupStructure(data_path, gestures, videoCount, multicam=False):
+
+def setup_structure(data_path, gestures, video_count, multicam=False):
     
     for gesture in gestures: 
-        maxDir = 0
+        max_dir = 0
         try:
-            existingDir = os.listdir(os.path.join(data_path, gesture))
-            maxDir = max(list(map(int, existingDir)))
+            existing_dir = os.listdir(os.path.join(data_path, gesture))
+            max_dir = max(list(map(int, existing_dir)))
         except:
             pass
 
-        for video in range(maxDir + 1, maxDir + videoCount+1):
+        for video in range(max_dir + 1, max_dir + video_count+1):
             try:
                 if multicam:
-                    os.makedirs(os.path.join(data_path, gesture, str(video+videoCount)))
+                    os.makedirs(os.path.join(data_path, gesture, str(video+video_count)))
                 os.makedirs(os.path.join(data_path, gesture, str(video)))
                 
             except:
@@ -21,7 +22,7 @@ def setupStructure(data_path, gestures, videoCount, multicam=False):
 
 if __name__ == "__main__":
     gestures = ['danke']
-    setupStructure(gestures, 5)
+    setup_structure(gestures, 5)
 
 
 

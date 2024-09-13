@@ -1,10 +1,10 @@
-from record_gestures import DataRecorder
-from model_training import Model
 import cv2
+from model_training import Model
 import numpy as npy
-import os
+from record_gestures import DataRecorder
 import tkinter as tk
 from tkinter import filedialog
+
 
 class GesturePrediction(DataRecorder, Model):
 
@@ -15,69 +15,67 @@ class GesturePrediction(DataRecorder, Model):
     def load_model_weights(self):
         root = tk.Tk()
         root.withdraw()
-        filePath = filedialog.askopenfilename(title="Please select the model's file")
-        self.model.load_weights(filePath)
+        file_path = filedialog.askopenfilename(title="Please select the model's file")
+        self.model.load_weights(file_path)
     
     def load_gestures(self):
         root = tk.Tk()
         root.withdraw()
-        gesturesPath = filedialog.askdirectory(title="Please select the folder containing the training data")
-        return gesturesPath
+        gestures_path = filedialog.askdirectory(title="Please select the folder containing the training data")
+        return gestures_path
     
-    def visualize_lmarks(self, frame, results, camNr=1):
+    def visualize_lmarks(self, frame, results):
         #Drawing specs for changing the  presentation style
-        POSE_LMARK = self.mpDrawUtil.DrawingSpec(color=(168,52,50), thickness=2, circle_radius=3)
-        POSE_CONN = self.mpDrawUtil.DrawingSpec(color=(50,50,168), thickness=2, circle_radius=2)
-        HAND_LMARK = self.mpDrawUtil.DrawingSpec(color=(134,109,29), thickness=2, circle_radius=3)
-        HAND_CONN = self.mpDrawUtil.DrawingSpec(color=(161,161,160), thickness=2, circle_radius=2)
+        POSE_LMARK = self.mp_draw_util.DrawingSpec(color=(168,52,50), thickness=2, circle_radius=3)
+        POSE_CONN = self.mp_draw_util.DrawingSpec(color=(50,50,168), thickness=2, circle_radius=2)
+        HAND_LMARK = self.mp_draw_util.DrawingSpec(color=(134,109,29), thickness=2, circle_radius=3)
+        HAND_CONN = self.mp_draw_util.DrawingSpec(color=(161,161,160), thickness=2, circle_radius=2)
 
         # Visualize face contours
         #mpDrawUtil.draw_landmarks(frame, results.face_landmarks, holisticModel.FACEMESH_CONTOURS)
         
         # Posture landmarks
-        self.mpDrawUtil.draw_landmarks(frame, results.pose_landmarks, self.holisticModel.POSE_CONNECTIONS, POSE_LMARK, POSE_CONN) 
+        self.mp_draw_util.draw_landmarks(frame, results.pose_landmarks, self.holistic_model.POSE_CONNECTIONS, POSE_LMARK, POSE_CONN) 
         # Left hand connections
-        self.mpDrawUtil.draw_landmarks(frame, results.left_hand_landmarks, self.holisticModel.HAND_CONNECTIONS, HAND_LMARK, HAND_CONN) 
+        self.mp_draw_util.draw_landmarks(frame, results.left_hand_landmarks, self.holistic_model.HAND_CONNECTIONS, HAND_LMARK, HAND_CONN) 
         # Right hand connections
-        self.mpDrawUtil.draw_landmarks(frame, results.right_hand_landmarks, self.holisticModel.HAND_CONNECTIONS, HAND_LMARK, HAND_CONN) 
+        self.mp_draw_util.draw_landmarks(frame, results.right_hand_landmarks, self.holistic_model.HAND_CONNECTIONS, HAND_LMARK, HAND_CONN) 
 
     
     def record_gestures(self):
         sequence = []
-        predictionAccuracy = 0
+        prediction_accuracy = 0
         threshold = 0.7
         self.load_model_weights()
         #Start recording process
-        with self.holisticModel.Holistic(min_detection_confidence=0.5, min_tracking_confidence=0.5) as hModel:
-            while self.cameraCapture.isOpened():
+        with self.holistic_model.Holistic(min_detection_confidence=0.5, min_tracking_confidence=0.5) as h_model:
+            while self.camera_capture.isOpened():
 
                 # Read incoming camera frames
-                ret, frame = self.cameraCapture.read()
+                ret, frame = self.camera_capture.read()
 
                 #Detect and process gesture keypoints
-                frame, results = self.keypoint_detection(frame, hModel)
+                frame, results = self.keypoint_detection(frame, h_model)
 
                 #Visualize keypoints and connections
                 self.visualize_lmarks(frame, results)
 
                 #Read landmark values
-                lmarkValues = self.read_lmark_values(results)
-                sequence.append(lmarkValues)
+                lmark_values = self.read_lmark_values(results)
+                sequence.append(lmark_values)
 
                 cv2.rectangle(frame, (0, 550), (800, 600), (255, 0, 0), -1)
                 
                 #Predict gesture after 30 recorded frames
                 if len(sequence) == 30:
                     res = self.model.predict(npy.expand_dims(sequence, axis=0))[0]
-                    predictionAccuracy = res[npy.argmax(res)]
-                    if predictionAccuracy < threshold:
+                    prediction_accuracy = res[npy.argmax(res)]
+                    if prediction_accuracy < threshold:
                         sequence = []
                         continue
-                    #Make sure that prediction is not just a fluke
-                    #if npy.unique(predictions[-2:])[0] == npy.argmax(res):
-                    screenText = "Gesture: " + self.gestures[npy.argmax(res)] + " Accuracy: " + str("%.2f" % predictionAccuracy)
+                    screen_text = "Gesture: " + self.gestures[npy.argmax(res)] + " Accuracy: " + str("%.2f" % prediction_accuracy)
                     
-                    cv2.putText(frame, screenText, (10, 585), cv2.FONT_HERSHEY_DUPLEX, 1, (255,255,255), 2, cv2.LINE_AA)
+                    cv2.putText(frame, screen_text, (10, 585), cv2.FONT_HERSHEY_DUPLEX, 1, (255,255,255), 2, cv2.LINE_AA)
                     cv2.imshow('Detecting gestures', frame)
                     cv2.waitKey(1000)
                     sequence = []
@@ -88,7 +86,7 @@ class GesturePrediction(DataRecorder, Model):
                 # Quit capture gracefully by pressing ESC
                 key = cv2.waitKey(10)
                 if key == 27:
-                    self.cameraCapture.release()
+                    self.camera_capture.release()
                     cv2.destroyAllWindows()
                     return
 
