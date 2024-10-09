@@ -26,13 +26,15 @@ class GesturePrediction(DataRecorder, Model):
     
     def visualize_lmarks(self, frame, results):
         #Drawing specs for changing the  presentation style
+        FACE_LMARK = self.mp_draw_util.DrawingSpec(color=(80,110,10), thickness=1, circle_radius=1)
+        FACE_CONN = self.mp_draw_util.DrawingSpec(color=(80,256,121), thickness=1, circle_radius=1)
         POSE_LMARK = self.mp_draw_util.DrawingSpec(color=(168,52,50), thickness=2, circle_radius=3)
         POSE_CONN = self.mp_draw_util.DrawingSpec(color=(50,50,168), thickness=2, circle_radius=2)
         HAND_LMARK = self.mp_draw_util.DrawingSpec(color=(134,109,29), thickness=2, circle_radius=3)
         HAND_CONN = self.mp_draw_util.DrawingSpec(color=(161,161,160), thickness=2, circle_radius=2)
 
         # Visualize face contours
-        #mpDrawUtil.draw_landmarks(frame, results.face_landmarks, holisticModel.FACEMESH_CONTOURS)
+        self.mp_draw_util.draw_landmarks(frame, results.face_landmarks, self.holistic_model.FACEMESH_TESSELATION, FACE_LMARK, FACE_CONN)
         
         # Posture landmarks
         self.mp_draw_util.draw_landmarks(frame, results.pose_landmarks, self.holistic_model.POSE_CONNECTIONS, POSE_LMARK, POSE_CONN) 
@@ -64,7 +66,7 @@ class GesturePrediction(DataRecorder, Model):
                 lmark_values = self.read_lmark_values(results)
                 sequence.append(lmark_values)
 
-                cv2.rectangle(frame, (0, 550), (800, 600), (255, 0, 0), -1)
+                cv2.rectangle(frame, (0, 650), (1280, 720), (255, 0, 0), -1)
                 
                 #Predict gesture after 30 recorded frames
                 if len(sequence) == 30:
@@ -75,7 +77,7 @@ class GesturePrediction(DataRecorder, Model):
                         continue
                     screen_text = "Gesture: " + self.gestures[npy.argmax(res)] + " Accuracy: " + str("%.2f" % prediction_accuracy)
                     
-                    cv2.putText(frame, screen_text, (10, 585), cv2.FONT_HERSHEY_DUPLEX, 1, (255,255,255), 2, cv2.LINE_AA)
+                    cv2.putText(frame, screen_text, (10, 680), cv2.FONT_HERSHEY_DUPLEX, 1, (255,255,255), 2, cv2.LINE_AA)
                     cv2.imshow('Detecting gestures', frame)
                     cv2.waitKey(1000)
                     sequence = []

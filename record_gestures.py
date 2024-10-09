@@ -19,7 +19,7 @@ class DataRecorder():
         self.mp_draw_util = mp.solutions.drawing_utils
 
         #Set up camera for recording
-        self.camera_capture = cv2.VideoCapture(1)
+        self.camera_capture = cv2.VideoCapture(0)
         self.camera_capture.set(cv2.CAP_PROP_FRAME_WIDTH, 800)
         self.camera_capture.set(cv2.CAP_PROP_FRAME_HEIGHT, 600)
 
@@ -59,13 +59,15 @@ class DataRecorder():
             self.mp_draw_util2.draw_landmarks(frame, results.right_hand_landmarks, self.holistic_model2.HAND_CONNECTIONS, HAND_LMARK, HAND_CONN) 
 
         #Drawing specs for changing the  presentation style
+        FACE_LMARK = self.mp_draw_util.DrawingSpec(color=(80,110,10), thickness=1, circle_radius=1)
+        FACE_CONN = self.mp_draw_util.DrawingSpec(color=(80,256,121), thickness=1, circle_radius=1)
         POSE_LMARK = self.mp_draw_util.DrawingSpec(color=(168,52,50), thickness=2, circle_radius=3)
         POSE_CONN = self.mp_draw_util.DrawingSpec(color=(50,50,168), thickness=2, circle_radius=2)
         HAND_LMARK = self.mp_draw_util.DrawingSpec(color=(134,109,29), thickness=2, circle_radius=3)
         HAND_CONN = self.mp_draw_util.DrawingSpec(color=(161,161,160), thickness=2, circle_radius=2)
 
         # Visualize face contours
-        #mpDrawUtil.draw_landmarks(frame, results.face_landmarks, holisticModel.FACEMESH_CONTOURS)
+        self.mp_draw_util.draw_landmarks(frame, results.face_landmarks, self.holistic_model.FACEMESH_TESSELATION, FACE_LMARK, FACE_CONN)
         
         # Posture landmarks
         self.mp_draw_util.draw_landmarks(frame, results.pose_landmarks, self.holistic_model.POSE_CONNECTIONS, POSE_LMARK, POSE_CONN) 
